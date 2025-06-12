@@ -1,7 +1,7 @@
 # VisionML-MaskInspector / 视觉ML-标注检查器
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Screenshot](https://raw.githubusercontent.com/tongweizj/VisionML-MaskInspector/main/doc/web-page-screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/tongweizj/VisionML-MaskInspector/refs/heads/main/doc/web-page-screenshot.png)
 
 ## English Version
 
