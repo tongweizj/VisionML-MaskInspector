@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .stats {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .image-set {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .image-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .image-title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            color: white;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .status-correct {
+            background-color: #a0d8ef;
+        }
+        .status-incorrect {
+            background-color: #333;
+        }
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .image-wrapper {
+            position: relative;
+            width: 224px;
+            height: 224px;
+        }
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    .mask-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 224px;
+      height: 224px;
+      opacity: 0.5;
+      pointer-events: none;
+      object-fit: fill;
+      
+    }
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: large;
+        }
+        .correct-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .incorrect-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .pagination a {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            text-decoration: none;
+            color: #333;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .missing {
+            color: #f44336;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><%= title %></h1>
+        <div class="stats">
+            总图片数: <%= stats.total %> | 
+            正确标注: <%= stats.correct %> | 
+            错误标注: <%= stats.incorrect %> | 
+            未标注: <%= stats.total - stats.correct - stats.incorrect %>
+        </div>
+    </div>
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="?page=<%= i %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+            <% } %>
+        </div>
+    <% } %>
+    <% images.forEach(image => { %>
+        <div id="image-<%= image.filename %>"  class="image-set">
+            <div class="image-header">
+                <div>
+                    <span class="image-title"><%= image.filename %></span>
+                    <% if (image.isRight === 1) { %>
+                        <span class="status-badge status-correct">正确</span>
+                    <% } else if (image.isRight === 0) { %>
+                        <span class="status-badge status-incorrect">错误</span>
+                    <% } %>
+                </div>
+                <div class="button-group">
+                    <form action="/update?_anchor=image-<%= image.filename %>&_page=<%= currentPage %>" method="post" style="display: inline;">
+                        <input type="hidden" name="filename" value="<%= image.filename %>">
+                        <input type="hidden" name="status" value="incorrect">
+                        <button type="submit" class="incorrect-btn">错误</button>
+                    </form>
+                    <form action="/update?_anchor=image-<%= image.filename %>&_page=<%= currentPage %>" method="post" style="display: inline;">
+                        <input type="hidden" name="filename" value="<%= image.filename %>">
+                        <input type="hidden" name="status" value="correct">
+                        <button type="submit" class="correct-btn">正确</button>
+                    </form>
+                </div>
+            </div>
+            
+            <% if (!image.rawExists) { %>
+                <p class="missing">原始图片缺失</p>
+            <% } else if (!image.allMasksExist) { %>
+                <p class="missing">部分或全部mask图片缺失</p>
+            <% } else { %>
+                <div class="image-container">
+                    <!-- 原始图片 -->
+                    <div class="image-wrapper">
+                        <img src="/images/originals/<%= image.filename %>" alt="Original">
+                    </div>
+                    
+                    <!-- 4个mask图片 -->
+                    <% 
+                        const baseName = image.filename.replace(/\.[^/.]+$/, "");
+                        const masks = [
+                            `/images/masks/${baseName}/kp_01.png`,
+                            `/images/masks/${baseName}/kp_02.png`,
+                            `/images/masks/${baseName}/kp_21.png`,
+                            `/images/masks/${baseName}/kp_03.png`
+                        ];
+                    %>
+                    
+                    <% masks.forEach(mask => { %>
+                        <div class="image-wrapper">
+                            <img src="<%= mask %>" alt="Mask" class="mask-overlay">
+                            <img src="/images/originals/<%= image.filename %>" alt="Original">
+                            
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+        </div>
+    <% }); %>
+    
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="?page=<%= i %>" <%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+            <% } %>
+        </div>
+    <% } %>
+</body>
+</html>

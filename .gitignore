@@ -134,3 +134,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+# dataset
+# public/images/masks/*
+# public/images/originals/*
+database/dataset.db.bk
+package-lock.json
