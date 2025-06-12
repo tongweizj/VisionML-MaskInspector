@@ -59,4 +59,4 @@ An Express-based web tool for validating image annotations in machine learning d
 
 ## Resource
 
-- [README中文版]()
+- [README中文版](https://github.com/tongweizj/VisionML-MaskInspector/blob/main/doc/%20README-cn.md)
