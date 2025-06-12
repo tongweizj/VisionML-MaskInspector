@@ -112,7 +112,7 @@ An Express-based web tool for validating image annotations in machine learning d
    ```
 
 ### 界面说明
-![UI示意图](https://via.placeholder.com/800x400?text=UI+Preview)
+![Screenshot](https://raw.githubusercontent.com/tongweizj/VisionML-MaskInspector/refs/heads/main/doc/web-page-screenshot.png)
 1. 顶部统计栏：总图片数/正确数/错误数
 2. 单套图片显示：
    - 标题区：文件名 + 状态标签
