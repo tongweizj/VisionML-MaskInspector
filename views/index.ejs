@@ -121,10 +121,10 @@
     <div class="header">
         <h1><%= title %></h1>
         <div class="stats">
-            总图片数: <%= stats.total %> | 
-            正确标注: <%= stats.correct %> | 
-            错误标注: <%= stats.incorrect %> | 
-            未标注: <%= stats.total - stats.correct - stats.incorrect %>
+            Number of Images: <%= stats.total %> | 
+            Correct: <%= stats.correct %> | 
+            Error: <%= stats.incorrect %> | 
+            No Judgment: <%= stats.total - stats.correct - stats.incorrect %>
         </div>
     </div>
     <% if (totalPages > 1) { %>
@@ -140,21 +140,21 @@
                 <div>
                     <span class="image-title"><%= image.filename %></span>
                     <% if (image.isRight === 1) { %>
-                        <span class="status-badge status-correct">正确</span>
+                        <span class="status-badge correct-btn">Right</span>
                     <% } else if (image.isRight === 0) { %>
-                        <span class="status-badge status-incorrect">错误</span>
+                        <span class="status-badge incorrect-btn">Wrong</span>
                     <% } %>
                 </div>
                 <div class="button-group">
                     <form action="/update?_anchor=image-<%= image.filename %>&_page=<%= currentPage %>" method="post" style="display: inline;">
                         <input type="hidden" name="filename" value="<%= image.filename %>">
                         <input type="hidden" name="status" value="incorrect">
-                        <button type="submit" class="incorrect-btn">错误</button>
+                        <button type="submit" class="incorrect-btn">Wrong</button>
                     </form>
                     <form action="/update?_anchor=image-<%= image.filename %>&_page=<%= currentPage %>" method="post" style="display: inline;">
                         <input type="hidden" name="filename" value="<%= image.filename %>">
                         <input type="hidden" name="status" value="correct">
-                        <button type="submit" class="correct-btn">正确</button>
+                        <button type="submit" class="correct-btn">Right</button>
                     </form>
                 </div>
             </div>

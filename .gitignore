@@ -139,3 +139,4 @@ dist
 # public/images/originals/*
 database/dataset.db.bk
 package-lock.json
+database/dataset.db
